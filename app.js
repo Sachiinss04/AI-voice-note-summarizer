@@ -1,10 +1,9 @@
 /* =============================================
-   VoiceNote AI — app.js
+   VoiceNote AI — app.js (Gemini Version)
    ============================================= */
 
 'use strict';
 
-// ── State ──────────────────────────────────────
 const state = {
   isRecording: false,
   mediaRecorder: null,
@@ -16,24 +15,21 @@ const state = {
   audioBlob: null,
   recognition: null,
   liveTranscript: '',
+  recognizedText: '',
   summaryText: '',
 };
 
-// ── DOM refs ───────────────────────────────────
 const $ = id => document.getElementById(id);
 
-// ── Init ───────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // Restore API key from sessionStorage
-  const savedKey = sessionStorage.getItem('claude_api_key');
+  const savedKey = sessionStorage.getItem('gemini_api_key');
   if (savedKey) $('api-key').value = savedKey;
-
   $('api-key').addEventListener('input', e => {
-    sessionStorage.setItem('claude_api_key', e.target.value.trim());
+    sessionStorage.setItem('gemini_api_key', e.target.value.trim());
   });
+  $('api-key').placeholder = 'AIzaSy...';
 });
 
-// ── Tab switching ──────────────────────────────
 function switchTab(tab, el) {
   state.currentTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -46,7 +42,6 @@ function switchTab(tab, el) {
   }
 }
 
-// ── Chip selection ─────────────────────────────
 function selectChip(group, value, el) {
   if (group === 'tone') state.currentTone = value;
   const container = el.closest('.chip-row');
@@ -54,23 +49,21 @@ function selectChip(group, value, el) {
   el.classList.add('active');
 }
 
-// ── Key visibility ─────────────────────────────
 function toggleKeyVisibility() {
   const inp = $('api-key');
   inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 
-// ── Recording ──────────────────────────────────
 function toggleRecording() {
   state.isRecording ? stopRecording() : startRecording();
 }
 
 function startRecording() {
   state.liveTranscript = '';
+  state.recognizedText = '';
   state.seconds = 0;
   state.audioChunks = [];
 
-  // Speech recognition
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SR) {
     state.recognition = new SR();
@@ -122,31 +115,22 @@ function stopRecording() {
   state.isRecording = false;
   clearInterval(state.timerInterval);
   if (state.recognition) { try { state.recognition.stop(); } catch(e) {} }
-  if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
-    state.mediaRecorder.stop();
-  }
+  if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') state.mediaRecorder.stop();
   updateRecordUI(false);
 }
 
 function updateRecordUI(recording) {
-  const btn = $('mic-btn');
-  const waveform = $('waveform');
-  const label = $('rec-label');
-  const timer = $('timer');
-
-  btn.classList.toggle('recording', recording);
-  waveform.classList.toggle('active', recording);
-  $('mic-svg').style.display = recording ? 'none' : 'block';
+  $('mic-btn').classList.toggle('recording', recording);
+  $('waveform').classList.toggle('active', recording);
+  $('mic-svg').style.display  = recording ? 'none'  : 'block';
   $('stop-svg').style.display = recording ? 'block' : 'none';
-  label.textContent = recording ? 'recording — tap to stop' : 'tap to start recording';
-  timer.classList.toggle('active', recording);
-
+  $('rec-label').textContent  = recording ? 'recording — tap to stop' : 'tap to start recording';
+  $('timer').classList.toggle('active', recording);
   if (!recording) {
     $('timer').textContent = `${Math.floor(state.seconds/60)}:${(state.seconds%60).toString().padStart(2,'0')}`;
   }
 }
 
-// ── File upload ────────────────────────────────
 function handleFileUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -158,27 +142,19 @@ function handleFileUpload(event) {
   $('file-meta').textContent = `${file.name} · ${(file.size / 1024).toFixed(0)} KB`;
 }
 
-// ── Main pipeline ──────────────────────────────
 async function runPipeline() {
   const apiKey = $('api-key').value.trim();
-  if (!apiKey) {
-    showError('Please enter your Claude API key above.');
-    return;
-  }
+  if (!apiKey) { showError('Please enter your Gemini API key above.'); return; }
 
   let inputText = '';
-
   if (state.currentTab === 'type') {
     inputText = $('manual-text').value.trim();
-    if (!inputText) {
-      showError('Please paste or type some text first.');
-      return;
-    }
+    if (!inputText) { showError('Please paste or type some text first.'); return; }
   } else {
     inputText = (state.recognizedText || '').trim();
     if (!inputText) {
       if (state.audioBlob) {
-        inputText = 'Voice memo recorded. Please use the text input tab to paste your transcript, or use a Whisper API integration for automatic transcription of audio files.';
+        inputText = 'Voice memo recorded. Please use the text input tab to paste your transcript.';
       } else {
         showError('Please record a voice note or paste some text first.');
         return;
@@ -190,23 +166,18 @@ async function runPipeline() {
   setLoading(true);
   showOutput('loading');
   setPipelineStep(1);
-
-  // Short delay to show pipeline animation
   await delay(600);
   setPipelineStep(2);
-  $('loading-text').textContent = 'Sending to Claude AI...';
+  $('loading-text').textContent = 'Sending to Gemini AI...';
 
   try {
-    const result = await callClaudeAPI(apiKey, inputText);
-
+    const result = await callGeminiAPI(apiKey, inputText);
     setPipelineStep(3);
     $('loading-text').textContent = 'Formatting results...';
     await delay(400);
-
     renderResult(result, inputText);
     showOutput('result');
     $('output-actions').style.display = 'flex';
-
   } catch (err) {
     showOutput('empty');
     showError(err.message || 'Something went wrong. Check your API key and try again.');
@@ -215,10 +186,10 @@ async function runPipeline() {
   }
 }
 
-async function callClaudeAPI(apiKey, transcript) {
+async function callGeminiAPI(apiKey, transcript) {
   const toneMap = {
     professional: 'Use formal, business-appropriate language.',
-    concise:      'Be extremely brief. Use bullet points. No fluff.',
+    concise:      'Be extremely brief. No fluff.',
     casual:       'Use friendly, conversational language.',
     detailed:     'Be thorough and comprehensive with context.',
   };
@@ -239,65 +210,56 @@ Analyze this transcript and return a JSON object with EXACTLY this structure:
 Rules:
 - Extract 2-5 action items (things someone needs to DO)
 - Extract 2-5 key points (important facts, decisions, or information)
-- Sentiment is strictly one of: positive, neutral, negative
+- Sentiment must be exactly one of: positive, neutral, negative
 - Tone: ${toneMap[state.currentTone]}
 - Return ONLY valid JSON. No markdown, no backticks, no explanation.
 
 Transcript:
 "${transcript}"`;
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.3, maxOutputTokens: 1000 },
+      }),
+    }
+  );
 
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}));
-    const msg = errData?.error?.message || `API error ${response.status}`;
-    throw new Error(msg);
+    throw new Error(errData?.error?.message || `API error ${response.status}`);
   }
 
   const data = await response.json();
-  const raw = data.content.map(b => b.text || '').join('');
+  const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
   const clean = raw.replace(/```json|```/g, '').trim();
 
   try {
     return JSON.parse(clean);
   } catch {
-    throw new Error('Could not parse Claude response. Please try again.');
+    throw new Error('Could not parse Gemini response. Please try again.');
   }
 }
 
-// ── Render result ──────────────────────────────
 function renderResult(r, transcript) {
-  // TL;DR
   $('tldr-text').textContent = r.tldr || '—';
 
-  // Sentiment badge
   const sb = $('sentiment-badge');
   const sentMap = { positive: '↑ Positive', neutral: '• Neutral', negative: '↓ Negative' };
   sb.textContent = sentMap[r.sentiment] || '• Neutral';
   sb.className = `meta-badge sentiment-badge ${r.sentiment || 'neutral'}`;
 
-  $('topic-badge').textContent = r.topic || '';
+  $('topic-badge').textContent    = r.topic || '';
   $('duration-badge').textContent = r.duration_estimate || '';
 
-  // Transcript
   const words = transcript.split(/\s+/).filter(Boolean).length;
   $('transcript-display').textContent = transcript;
   $('word-count').textContent = `${words} words`;
 
-  // Key points
   const keyList = $('key-list');
   keyList.innerHTML = '';
   (r.key_points || []).forEach(point => {
@@ -306,10 +268,8 @@ function renderResult(r, transcript) {
     keyList.appendChild(li);
   });
 
-  // Context
   $('context-text').textContent = r.context || r.key_points?.[0] || '—';
 
-  // Action items
   const actionList = $('action-list');
   actionList.innerHTML = '';
   (r.action_items || []).forEach((action, i) => {
@@ -323,7 +283,6 @@ function renderResult(r, transcript) {
   });
   $('action-count').textContent = `${(r.action_items || []).length} items`;
 
-  // Store for TTS
   state.summaryText = `Summary: ${r.tldr}. Key points: ${(r.key_points || []).join('. ')}. Action items: ${(r.action_items || []).join('. ')}`;
 }
 
@@ -335,17 +294,14 @@ function toggleCheck(i) {
   chk.setAttribute('aria-checked', checked);
 }
 
-// ── TTS ────────────────────────────────────────
 function speakSummary() {
   if (!state.summaryText || !window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(state.summaryText);
   utt.rate = 0.95;
-  utt.pitch = 1;
   window.speechSynthesis.speak(utt);
 }
 
-// ── Copy ───────────────────────────────────────
 function copyAll() {
   if (!state.summaryText) return;
   navigator.clipboard.writeText(state.summaryText).then(() => {
@@ -356,20 +312,10 @@ function copyAll() {
   });
 }
 
-// ── Reset ──────────────────────────────────────
 function resetApp() {
   if (state.isRecording) stopRecording();
   if (window.speechSynthesis) window.speechSynthesis.cancel();
-
-  Object.assign(state, {
-    seconds: 0,
-    audioBlob: null,
-    audioChunks: [],
-    liveTranscript: '',
-    recognizedText: '',
-    summaryText: '',
-  });
-
+  Object.assign(state, { seconds:0, audioBlob:null, audioChunks:[], liveTranscript:'', recognizedText:'', summaryText:'' });
   $('timer').textContent = '0:00';
   $('timer').classList.remove('active');
   $('rec-label').textContent = 'tap to start recording';
@@ -380,7 +326,6 @@ function resetApp() {
   hideError();
 }
 
-// ── UI helpers ─────────────────────────────────
 function showOutput(mode) {
   $('empty-state').style.display   = mode === 'empty'   ? 'flex'  : 'none';
   $('loading-state').style.display = mode === 'loading' ? 'flex'  : 'none';
@@ -394,7 +339,7 @@ function setPipelineStep(step) {
     if (i < step) el.classList.add('done');
     if (i === step) el.classList.add('active');
   }
-  const labels = ['Transcribing', 'Analyzing with Claude', 'Extracting insights'];
+  const labels = ['Transcribing', 'Analyzing with Gemini', 'Extracting insights'];
   $('loading-text').textContent = labels[step - 1] + '...';
 }
 
@@ -412,9 +357,7 @@ function showError(msg) {
   el.style.display = 'block';
 }
 
-function hideError() {
-  $('error-msg').style.display = 'none';
-}
+function hideError() { $('error-msg').style.display = 'none'; }
 
 function escapeHtml(str) {
   const div = document.createElement('div');
@@ -422,6 +365,4 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
