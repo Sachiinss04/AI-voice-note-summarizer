@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceNote AI — Transcribe & Summarize</title>
+  <meta name="description" content="Record voice notes, get instant AI transcription and smart summaries with action items. Powered by Claude AI." />
+  <meta property="og:title" content="VoiceNote AI" />
+  <meta property="og:description" content="Record → Transcribe → Summarize. AI-powered voice note tool." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="logo">
+        <span class="logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </span>
+        VoiceNote<span class="logo-ai">AI</span>
+      </div>
+      <div class="nav-links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#app" class="nav-cta">Try it free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-circle c1"></div>
+      <div class="hero-circle c2"></div>
+      <div class="hero-grid"></div>
+    </div>
+    <div class="container">
+      <div class="hero-badge">Powered by Claude AI</div>
+      <h1 class="hero-title">
+        Your voice.<br/>
+        <span class="italic-accent">Instantly</span> organized.
+      </h1>
+      <p class="hero-sub">
+        Record a voice note, get a structured summary with action items, key points,
+        and sentiment analysis — in seconds.
+      </p>
+      <div class="hero-actions">
+        <a href="#app" class="btn-primary">Start recording</a>
+        <a href="#how-it-works" class="btn-ghost">See how it works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">3</span><span class="stat-lbl">step pipeline</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-num">~5s</span><span class="stat-lbl">to summarize</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">browser-based</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how-it-works">
+    <div class="container">
+      <div class="section-label">The Pipeline</div>
+      <h2 class="section-title">Three steps. Zero friction.</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+            </svg>
+          </div>
+          <h3>Record</h3>
+          <p>Tap to record directly in your browser, upload an audio file, or paste text. No app install needed.</p>
+          <div class="step-tech">Web Speech API · MediaRecorder</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <h3>Transcribe</h3>
+          <p>Real-time speech-to-text converts your voice to text as you speak. Supports multiple languages.</p>
+          <div class="step-tech">Whisper API · Web Speech API</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <h3>Summarize</h3>
+          <p>Claude AI extracts action items, key points, and sentiment. Choose your preferred tone and detail level.</p>
+          <div class="step-tech">Claude API · NLP</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section class="app-section" id="app">
+    <div class="container">
+      <div class="section-label">The App</div>
+      <h2 class="section-title">Start summarizing</h2>
+
+      <div class="app-layout">
+
+        <!-- LEFT: Input Panel -->
+        <div class="panel" id="input-panel">
+          <div class="panel-header">
+            <span class="panel-title">Input</span>
+            <div class="input-tabs">
+              <button class="tab active" data-tab="record" onclick="switchTab('record', this)">🎙 Record</button>
+              <button class="tab" data-tab="type" onclick="switchTab('type', this)">✏️ Text</button>
+            </div>
+          </div>
+
+          <!-- API Key -->
+          <div class="api-key-row">
+            <label class="field-label">Claude API Key</label>
+            <div class="key-input-wrap">
+              <input type="password" id="api-key" placeholder="sk-ant-..." autocomplete="off" />
+              <button class="key-toggle" onclick="toggleKeyVisibility()" title="Show/hide key">
+                <svg id="eye-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="key-hint">
+              Key stored in browser only. Get yours at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>
+            </div>
+          </div>
+
+          <!-- Record Tab -->
+          <div class="tab-content" id="tab-record">
+            <div class="record-zone">
+              <div class="waveform" id="waveform">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+              </div>
+              <button class="mic-btn" id="mic-btn" onclick="toggleRecording()" aria-label="Toggle recording">
+                <svg class="mic-svg" id="mic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" y1="19" x2="12" y2="23"/>
+                  <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+                <svg class="stop-svg" id="stop-svg" viewBox="0 0 24 24" style="display:none">
+                  <rect x="5" y="5" width="14" height="14" rx="2" fill="currentColor"/>
+                </svg>
+              </button>
+              <div class="rec-status">
+                <div class="timer" id="timer">0:00</div>
+                <div class="rec-label" id="rec-label">tap to start recording</div>
+              </div>
+            </div>
+
+            <div class="divider"><span>or upload audio</span></div>
+
+            <label class="upload-zone" for="audio-file-input">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Drop audio file or <u>browse</u></span>
+              <small>MP3 · WAV · M4A · WebM · OGG</small>
+              <input type="file" id="audio-file-input" accept="audio/*" onchange="handleFileUpload(event)" />
+            </label>
+
+            <div id="audio-preview" style="display:none;">
+              <audio id="audio-player" controls></audio>
+              <div id="file-meta"></div>
+            </div>
+          </div>
+
+          <!-- Text Tab -->
+          <div class="tab-content" id="tab-type" style="display:none;">
+            <div class="field-label" style="margin-bottom:6px;">Paste transcript or type your note</div>
+            <textarea id="manual-text" placeholder="Discussed the Q4 launch timeline with Sarah. Need to finalize designs by Friday. Budget needs approval from Mike. Schedule follow-up for next Tuesday..."></textarea>
+          </div>
+
+          <!-- Options -->
+          <div class="options-row">
+            <div>
+              <div class="field-label">Summary tone</div>
+              <div class="chip-row" id="tone-chips">
+                <button class="chip active" onclick="selectChip('tone', 'professional', this)">Professional</button>
+                <button class="chip" onclick="selectChip('tone', 'concise', this)">Concise</button>
+                <button class="chip" onclick="selectChip('tone', 'casual', this)">Casual</button>
+                <button class="chip" onclick="selectChip('tone', 'detailed', this)">Detailed</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="run-btn" id="run-btn" onclick="runPipeline()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+            Analyze & Summarize
+          </button>
+
+          <div class="error-msg" id="error-msg"></div>
+        </div>
+
+        <!-- RIGHT: Output Panel -->
+        <div class="panel output-panel" id="output-panel">
+          <div class="panel-header">
+            <span class="panel-title">Output</span>
+            <div id="output-actions" style="display:none; gap:8px; display:none;">
+              <button class="icon-btn" onclick="copyAll()" title="Copy summary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
+              <button class="icon-btn" onclick="speakSummary()" title="Read aloud">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                Listen
+              </button>
+              <button class="icon-btn" onclick="resetApp()" title="Reset">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.65"/></svg>
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty state -->
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </div>
+            <p>Your summary will appear here after you record or paste a note and click <strong>Analyze</strong>.</p>
+          </div>
+
+          <!-- Loading state -->
+          <div class="loading-state" id="loading-state" style="display:none;">
+            <div class="pipeline-steps">
+              <div class="pip" id="pip-1">
+                <div class="pip-dot"></div>
+                <div class="pip-label">Transcribing</div>
+              </div>
+              <div class="pip-line"></div>
+              <div class="pip" id="pip-2">
+                <div class="pip-dot"></div>
+                <div class="pip-label">Analyzing</div>
+              </div>
+              <div class="pip-line"></div>
+              <div class="pip" id="pip-3">
+                <div class="pip-dot"></div>
+                <div class="pip-label">Extracting</div>
+              </div>
+            </div>
+            <div class="loading-text" id="loading-text">Processing your note...</div>
+          </div>
+
+          <!-- Result state -->
+          <div class="result-state" id="result-state" style="display:none;">
+
+            <!-- TLDR card -->
+            <div class="result-block tldr-block">
+              <div class="result-label">tl;dr</div>
+              <div class="tldr-text" id="tldr-text"></div>
+              <div class="meta-row">
+                <span class="meta-badge sentiment-badge" id="sentiment-badge"></span>
+                <span class="meta-badge" id="topic-badge"></span>
+                <span class="meta-badge" id="duration-badge"></span>
+              </div>
+            </div>
+
+            <!-- Transcript -->
+            <div class="result-block">
+              <div class="result-label-row">
+                <div class="result-label">Transcript</div>
+                <span class="word-count" id="word-count"></span>
+              </div>
+              <div class="transcript-box" id="transcript-display"></div>
+            </div>
+
+            <!-- Two-col: key points + context -->
+            <div class="two-col">
+              <div class="result-block">
+                <div class="result-label">Key points</div>
+                <ul class="key-list" id="key-list"></ul>
+              </div>
+              <div class="result-block">
+                <div class="result-label">Context</div>
+                <div class="context-text" id="context-text"></div>
+              </div>
+            </div>
+
+            <!-- Action items -->
+            <div class="result-block">
+              <div class="result-label-row">
+                <div class="result-label">Action items</div>
+                <span class="action-count" id="action-count"></span>
+              </div>
+              <div class="action-list" id="action-list"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- end app-layout -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="logo">VoiceNote<span class="logo-ai">AI</span></div>
+        <div class="footer-links">
+          <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://console.anthropic.com" target="_blank" rel="noopener">Get API Key</a>
+          <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Claude Docs</a>
+        </div>
+        <div class="footer-copy">Built with Claude API · Deploy free on GitHub Pages</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
