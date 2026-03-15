@@ -2,7 +2,7 @@
 
 > Record voice notes → get instant AI transcription + smart summaries with action items.
 
-**Live demo:** `https://YOUR-USERNAME.github.io/voice-note-ai`
+**Live demo:** `https://github.com/Sachiinss04/AI-voice-note-summarizer.git`
 
 ---
 
